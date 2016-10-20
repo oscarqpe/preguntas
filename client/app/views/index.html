@@ -1,0 +1,122 @@
+<style type="text/css">
+    pre {
+        display: block;
+        padding: 0px !important;
+        margin: 0px !important;
+        font-size: 12px !important;
+        /* line-height: 1.42857143; */
+        /* color: #333; */
+        /* word-break: break-all; */
+        /* word-wrap: break-word; */
+        /* background-color: #f5f5f5; */
+        border: 0px solid #ccc !important;
+        /* border-radius: 4px; */
+    }
+    .pregunta {
+        padding-top: 10px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        font-weight: bold;
+        background-color: #f5f5f5;
+        margin-bottom: auto;
+        font-size: 12px;
+    }
+    .alternativas {
+        padding-left: 20px !important;
+        padding-right: 10px !important;
+    }
+    .respuesta {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        font-weight: bold;
+    }
+    .ubicacion {
+        padding-bottom: 10px !important;
+        padding-left: 20px !important;
+        padding-right: 10px !important;
+        font-size: 9px !important;
+    }
+    .ui-menu-item {
+        cursor: pointer;
+        background-color: #f5f5f5;
+        border: 1px solid #e3e3e3;
+        padding: 5px;
+    }
+    .ui-menu-item:hover {
+        cursor: pointer;
+        border-left-color: #1b809e;
+        border-left-width: 3px;
+        padding: 5px;
+        color: #1b809e;
+    }
+    .ui-autocomplete {
+        padding: 10px;
+        background-color: #e3e3e3;
+        list-style-type: none;
+    }
+</style>
+
+<div class="col-lg-12">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="col-lg-8">
+                <input class="form-control" type="text" 
+                    name="pregunta" 
+                    placeholder="Escriba la pregunta"
+                    id="search" autocomplete="off" 
+                    focus-on="search">
+            </div>
+            <div class="col-lg-4">
+                <button class="btn btn-warning" ng-click="limpiar()"><i class="fa fa-refresh"></i> Limpiar</button>
+                <button class="btn btn-success" ng-click="all()"><i class="fa fa-search"></i> Todo</button>
+                <!--button class="btn btn-danger" ng-click="generate()"><i class="fa fa-stop"></i> Generate</button-->
+            </div>
+        </div>
+    </div>
+    <div class="well" >
+        <div class="panel panel-info" ng-repeat="pre in preguntas">
+            <div class="panel-body">
+                <div><p class="pregunta">{{pre.id}}. {{pre.pregunta}}</p></div>
+
+                <div><pre class="alternativas">{{pre.alternativas}}</pre></div>
+
+                <div><pre class="respuesta">{{pre.respuesta}}</pre></div>
+
+                <div><pre class="ubicacion">{{pre.ubicacion}} {{pre.codigo}}</pre></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#search").autocomplete({
+        minLength: 3,
+        select: function (event, ui) {
+            //$("#IDObras").val(ui.item.id);
+            console.log(ui);
+            angular.element('#search').scope().autoComplete(ui.item.id);
+        },
+        source: function (request, response) {
+            $.ajax({
+                url: "/api/Preguntas/search",
+                type: "GET",
+                data: {
+                  query: request.term
+                },
+                success: function (data) {
+                    response($.map(data.data.preguntas, function (item) {
+                        return {
+                            label: item.id + ": " + item.pregunta,
+                            value: request.term, 
+                            id: item.id,
+                            query: request.term
+                        }
+                    }))
+                }
+            })
+        }
+    });
+    $(function () {
+        $("#search").focus();
+    })
+</script>

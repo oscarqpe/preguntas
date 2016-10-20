@@ -1,0 +1,21 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "dbMysql": {
+    "host": "localhost",
+    "port": 3306,
+    "database": "fps_sistemas",
+    "password": "nextlimit123",
+    "name": "dbMysql",
+    "user": "root",
+    "connector": "mysql"
+  },
+  "storage": {
+    "name": "storage",
+    "connector": "loopback-component-storage",
+    "provider": "filesystem",
+    "root": "./server/storage"
+  }
+}
